@@ -3,7 +3,7 @@ const Task = require("../model/task.model");
 const paginationHelper = require("../../../helper/pagination.helper");
 const searchHelper = require("../../../helper/search.helper");
 
-// [GET] /tasks/
+// [GET] /api/vi/tasks/
 module.exports.index = async (req, res) => {
   try {
     const find = {
@@ -51,7 +51,7 @@ module.exports.index = async (req, res) => {
 }
 
 
-// [GET] /tasks/detail/:id
+// [GET] /api/vi/tasks/detail/:id
 module.exports.detail = async (req, res) => {
   try {
     const id = req.params.id;
@@ -68,7 +68,7 @@ module.exports.detail = async (req, res) => {
   }
 }
 
-// [PATCH] /tasks/change-status/:id
+// [PATCH] /api/vi/tasks/change-status/:id
 module.exports.changeStatus = async (req, res) => {
   try {
     const id = req.params.id;
@@ -88,7 +88,7 @@ module.exports.changeStatus = async (req, res) => {
   }
 }
 
-// [PATCH] /tasks/change-multip
+// [PATCH] /api/vi/tasks/change-multip
 module.exports.changeMultip = async (req, res) => {
   try {
     const { id, key, value } = req.body;
@@ -133,7 +133,7 @@ module.exports.changeMultip = async (req, res) => {
   }
 }
 
-// [POST] /tasks/create
+// [POST] /api/vi/tasks/create
 module.exports.create = async (req, res) => {
   try {
     const task = new Task(req.body);
@@ -153,7 +153,7 @@ module.exports.create = async (req, res) => {
   }
 }
 
-// [PATCH] /tasks/edit/:id
+// [PATCH] /api/vi/tasks/edit/:id
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
@@ -172,7 +172,7 @@ module.exports.edit = async (req, res) => {
   }
 }
 
-// [DELETE] /tasks/delete/:id
+// [DELETE] /api/vi/tasks/delete/:id
 module.exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
@@ -191,6 +191,29 @@ module.exports.delete = async (req, res) => {
     res.json({
       code: "400",
       message: "Xoá thất bại"
+    });
+  }
+}
+
+// [PATCH] /api/vi/tasks/undo/:id
+module.exports.undo = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Task.updateOne({
+      _id: id,
+      deleted: true
+    }, {
+      deleted: false
+    });
+
+    res.json({
+      code: "200",
+      message: "Hoàn tác thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: "400",
+      message: "Hoàn tác thất bại"
     });
   }
 }
