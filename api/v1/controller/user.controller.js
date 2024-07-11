@@ -52,7 +52,7 @@ module.exports.login = async (req, res) => {
 }
 
 // [POST] /api/v1/user/password/forgot
-module.exports.forgot = async (req, res) => {
+module.exports.forgotPassword = async (req, res) => {
   try {
     const email = req.body.email;
     const user = await User.findOne({
@@ -90,12 +90,52 @@ module.exports.forgot = async (req, res) => {
 
     res.json({
       code: "200",
-      message: "Đã gửi mã OTP tới email!"
+      message: "Đã gửi mã OTP tới email!",
+      email: email
     })
   } catch (error) {
     res.json({
       code: "400",
       message: "Lỗi"
     });
+  }
+}
+
+// [POST] /api/vi/user/password/otp
+module.exports.otpPassword = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const otp = req.body.otp;
+
+    const otpExist = await ForgotPassword.findOne({
+      email: email,
+      otp: otp
+    });
+
+    if (!otpExist) {
+      res.json({
+        code: "400",
+        message: "Mã Otp không chính xác!"
+      });
+      return;
+    }
+
+    const user = await User.findOne({
+      email: email
+    })
+
+    const token = user.token;
+    res.cookie("token", token);
+
+    res.json({
+      code: "200",
+      message: "Xác thự thành công!",
+      token: token
+    });
+  } catch (error) {
+    res.json({
+      code: "400",
+      message: "Error"
+    })
   }
 }

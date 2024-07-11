@@ -15,14 +15,14 @@ const validateEmail = (email) => {
 }
 
 module.exports.register = async (req, res, next) => {
-  const exsitEmail = await User.findOne({
+  const existEmail = await User.findOne({
     email: req.body.email,
     deleted: false
   });
 
   validateEmail(req.body.email);
 
-  if (exsitEmail) {
+  if (existEmail) {
     res.json({
       code: "400",
       message: "Email đã tồn tại"
