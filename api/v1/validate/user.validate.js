@@ -69,3 +69,31 @@ module.exports.login = async (req, res, next) => {
   next();
 }
 
+module.exports.resetPassword = async (req, res, next) => {
+  const token = req.cookies.token;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  const user = await User.findOne({
+    token: token
+  });
+
+  if (password != confirmPassword) {
+    res.json({
+      code: "400",
+      message: "Mật khẩu không khớp",
+    });
+    return;
+  }
+
+  if (md5(password) === user.password) {
+    res.json({
+      code: "400",
+      message: "Vui lòng nhập mật khẩu mới khác mật khẩu cũ",
+    });
+    return;
+  }
+
+  next();
+}
+

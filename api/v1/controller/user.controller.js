@@ -101,7 +101,7 @@ module.exports.forgotPassword = async (req, res) => {
   }
 }
 
-// [POST] /api/vi/user/password/otp
+// [POST] /api/v1/user/password/otp
 module.exports.otpPassword = async (req, res) => {
   try {
     const email = req.body.email;
@@ -137,5 +137,29 @@ module.exports.otpPassword = async (req, res) => {
       code: "400",
       message: "Error"
     })
+  }
+}
+
+//[POST] /api/v1/user/password/reset
+module.exports.resetPassword = async (req, res) => {
+  try {
+    const password = md5(req.body.password);
+    const token = req.cookies.token;
+
+    await User.updateOne({
+      token: token
+    }, {
+      password: password
+    });
+
+    res.json({
+      code: "200",
+      message: "Thay đổi mật khẩu thành công"
+    });
+  } catch (error) {
+    res.json({
+      code: "400",
+      message: "Error"
+    });
   }
 }
