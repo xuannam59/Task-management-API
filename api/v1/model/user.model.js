@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   avata: String,
   email: String,
   password: String,
-  tonken: {
+  token: {
     type: String,
     default: generateHelper.generateRandomChar(25),
   },
