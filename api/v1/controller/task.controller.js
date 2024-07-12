@@ -8,8 +8,17 @@ const searchHelper = require("../../../helper/search.helper");
 module.exports.index = async (req, res) => {
   try {
     const find = {
+      $or: [
+        {
+          createBy: req.user.id
+        },
+        {
+          listUsers: req.user.id
+        }
+      ],
       deleted: false,
     }
+    console.log(req.user.id);
 
     // filter status
     if (req.query.status) {
@@ -50,7 +59,6 @@ module.exports.index = async (req, res) => {
     });
   }
 }
-
 
 // [GET] /api/v1/tasks/detail/:id
 module.exports.detail = async (req, res) => {
