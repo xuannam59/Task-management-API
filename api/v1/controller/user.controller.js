@@ -11,6 +11,7 @@ module.exports.register = async (req, res) => {
     req.body.password = md5(req.body.password);
 
     const data = req.body;
+    data.token = generateHelper.generateRandomChar(25);
     delete data.confirmPassword;
     const user = new User(data);
     await user.save();
@@ -74,7 +75,7 @@ module.exports.forgotPassword = async (req, res) => {
     const data = {
       email: email,
       otp: otp,
-      expireAt: Date.now() + timeExpire * 60,
+      expireAt: Date.now() + timeExpire * 60 * 1000,
     }
 
     const forgot = new ForgotPassword(data);

@@ -7,10 +7,7 @@ const userSchema = new mongoose.Schema({
   avata: String,
   email: String,
   password: String,
-  token: {
-    type: String,
-    default: generateHelper.generateRandomChar(25),
-  },
+  token: String,
   deleted: {
     type: Boolean,
     default: false
