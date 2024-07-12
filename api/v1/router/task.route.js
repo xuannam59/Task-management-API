@@ -19,5 +19,7 @@ router.delete("/delete/:id", controller.delete);
 
 router.patch("/undo/:id", controller.undo);
 
+router.get("/list", controller.list);
+
 
 module.exports = router;

@@ -1,9 +1,10 @@
 const Task = require("../model/task.model");
+const User = require("../model/user.model");
 
 const paginationHelper = require("../../../helper/pagination.helper");
 const searchHelper = require("../../../helper/search.helper");
 
-// [GET] /api/vi/tasks/
+// [GET] /api/v1/tasks/
 module.exports.index = async (req, res) => {
   try {
     const find = {
@@ -51,7 +52,7 @@ module.exports.index = async (req, res) => {
 }
 
 
-// [GET] /api/vi/tasks/detail/:id
+// [GET] /api/v1/tasks/detail/:id
 module.exports.detail = async (req, res) => {
   try {
     const id = req.params.id;
@@ -68,7 +69,7 @@ module.exports.detail = async (req, res) => {
   }
 }
 
-// [PATCH] /api/vi/tasks/change-status/:id
+// [PATCH] /api/v1/tasks/change-status/:id
 module.exports.changeStatus = async (req, res) => {
   try {
     const id = req.params.id;
@@ -88,7 +89,7 @@ module.exports.changeStatus = async (req, res) => {
   }
 }
 
-// [PATCH] /api/vi/tasks/change-multip
+// [PATCH] /api/v1/tasks/change-multip
 module.exports.changeMultip = async (req, res) => {
   try {
     const { id, key, value } = req.body;
@@ -133,9 +134,10 @@ module.exports.changeMultip = async (req, res) => {
   }
 }
 
-// [POST] /api/vi/tasks/create
+// [POST] /api/v1/tasks/create
 module.exports.create = async (req, res) => {
   try {
+    req.body.createBy = req.user.id;
     const task = new Task(req.body);
     await task.save();
 
@@ -153,7 +155,7 @@ module.exports.create = async (req, res) => {
   }
 }
 
-// [PATCH] /api/vi/tasks/edit/:id
+// [PATCH] /api/v1/tasks/edit/:id
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
@@ -172,7 +174,7 @@ module.exports.edit = async (req, res) => {
   }
 }
 
-// [DELETE] /api/vi/tasks/delete/:id
+// [DELETE] /api/v1/tasks/delete/:id
 module.exports.delete = async (req, res) => {
   try {
     const id = req.params.id;
@@ -195,7 +197,7 @@ module.exports.delete = async (req, res) => {
   }
 }
 
-// [PATCH] /api/vi/tasks/undo/:id
+// [PATCH] /api/v1/tasks/undo/:id
 module.exports.undo = async (req, res) => {
   try {
     const id = req.params.id;
@@ -215,5 +217,25 @@ module.exports.undo = async (req, res) => {
       code: "400",
       message: "Hoàn tác thất bại"
     });
+  }
+}
+
+// [GET] /api/v1/tasks/list
+module.exports.list = async (req, res) => {
+  try {
+    const users = await User.find({
+      deleted: false
+    }).select("id fullName");
+
+    res.json({
+      code: "200",
+      message: "Success",
+      users: users
+    })
+  } catch (error) {
+    res.json({
+      code: "400",
+      message: "Error"
+    })
   }
 }
