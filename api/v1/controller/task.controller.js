@@ -24,7 +24,7 @@ module.exports.index = async (req, res) => {
     // Pagination 
     const initPagination = {
       currentPagination: 1,
-      limitRecord: 2,
+      limitRecord: 3,
     };
     const countRecord = await Task.countDocuments(find);
     objectPagination = paginationHelper(initPagination, req.query, countRecord);
